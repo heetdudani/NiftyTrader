@@ -1,8 +1,88 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { RefreshCcw, TrendingUp, X, ShoppingCart, DollarSign, Activity, LayoutDashboard, BarChart2, List, PieChart, Filter, Calendar } from 'lucide-react';
+import { RefreshCcw, TrendingUp, X, ShoppingCart, DollarSign, Activity, LayoutDashboard, BarChart2, List, PieChart, Filter, Calendar, Mail, Lock, LogIn, LogOut } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, ReferenceLine } from 'recharts';
 
 const API_URL = "http://localhost:8000/api";
+
+// --- LOGIN COMPONENT ---
+const Login = ({ onLogin }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email === "dudani217@gmail.com" && password === "Heet@2004") {
+      onLogin();
+    } else {
+      setError("Invalid Email or Password");
+      // Shake animation trigger could go here
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="bg-slate-800 border border-slate-700 w-full max-w-md p-8 rounded-2xl shadow-2xl shadow-black/50">
+        <div className="text-center mb-8">
+          <div className="mx-auto bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20">
+            <Activity className="text-white" size={24} />
+          </div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Welcome Back</h1>
+          <p className="text-gray-400 text-sm mt-2">Sign in to access TradePro Dashboard</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm p-3 rounded-lg text-center font-bold">
+              {error}
+            </div>
+          )}
+          
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Email Address</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-gray-500" />
+              </div>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 text-white pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                placeholder="name@example.com"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-gray-400 uppercase ml-1">Password</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock className="h-5 w-5 text-gray-500" />
+              </div>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 text-white pl-10 pr-4 py-3 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            <LogIn size={18} /> Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 const Dashboard = () => {
   const lotSize = 75;
@@ -728,7 +808,13 @@ const Analysis = () => {
 };
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
+
+  if (!isAuthenticated) {
+    return <Login onLogin={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-blue-500 selection:text-white">
       <div className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-lg border-b border-slate-800">
@@ -741,7 +827,10 @@ export default function App() {
             <button onClick={() => setActiveTab("dashboard")} className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "dashboard" ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" : "text-gray-400 hover:text-white hover:bg-slate-700"}`}><LayoutDashboard size={16} /> Dashboard</button>
             <button onClick={() => setActiveTab("analysis")} className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "analysis" ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" : "text-gray-400 hover:text-white hover:bg-slate-700"}`}><BarChart2 size={16} /> Analysis</button>
           </div>
-          <div className="hidden sm:flex w-8 h-8 rounded-full bg-slate-800 border border-slate-700 items-center justify-center"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div></div>
+          <div className="hidden sm:flex items-center gap-4">
+            <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div></div>
+            <button onClick={() => setIsAuthenticated(false)} className="text-gray-400 hover:text-red-400 transition-colors"><LogOut size={18} /></button>
+          </div>
         </div>
       </div>
       <div className="pt-4">
