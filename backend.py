@@ -47,11 +47,12 @@ expiry = None
 LOT_SIZE = 75
 
 CURRENT_WATCHLIST = {"CE": None, "PE": None} 
+# add your data
 
-API_KEY = '2tYSTTys'
-USERNAME = 'S618814'
-PASSWORD = '2004'
-TOTP_SECRET = 'LC5HPYXK3UVQRWZCD2OIU2WUBA'
+API_KEY = 
+USERNAME = 
+PASSWORD = 
+TOTP_SECRET = 
 
 # --- MODELS ---
 class RowRequest(BaseModel):
